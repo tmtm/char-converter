@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Character Converter</title>
+        <script src="vue.js"></script>
+        <style>
+         td.label {
+             text-align: right;
+         }
+        </style>
+    </head>
+    <body>
+        <div id="app">
+            <table>
+                <tr><td class="label">ASCII<br>(input)<td><textarea v-model="input" rows="3" cols="80"></textarea></td></td></tr>
+                <tr><td class="label">Bold<td><textarea readonly=true rows="3" cols="80">{{ bold(input) }}</textarea></td></td></tr>
+                <tr><td class="label">Italic<td><textarea readonly=true rows="3" cols="80">{{ italic(input) }}</textarea></td></td></tr>
+                <tr><td class="label">Bold Italic<td><textarea readonly=true rows="3" cols="80">{{ bold_italic(input) }}</textarea></td></td></tr>
+                <tr><td class="label">Script<td><textarea readonly=true rows="3" cols="80">{{ script(input) }}</textarea></td></td></tr>
+                <tr><td class="label">Bold Script<td><textarea readonly=true rows="3" cols="80">{{ bold_script(input) }}</textarea></td></td></tr>
+                <tr><td class="label">Fraktur<td><textarea readonly=true rows="3" cols="80">{{ fraktur(input) }}</textarea></td></td></tr>
+                <tr><td class="label">Double Struck<td><textarea readonly=true rows="3" cols="80">{{ double_struck(input) }}</textarea></td></td></tr>
+                <tr><td class="label">Bold Fraktur<td><textarea readonly=true rows="3" cols="80">{{ bold_fraktur(input) }}</textarea></td></td></tr>
+                <tr><td class="label">Sans Serif<td><textarea readonly=true rows="3" cols="80">{{ sans_serif(input) }}</textarea></td></td></tr>
+                <tr><td class="label">Sans Serif Bold<td><textarea readonly=true rows="3" cols="80">{{ sans_serif_bold(input) }}</textarea></td></td></tr>
+                <tr><td class="label">Sans Serif Italic<td><textarea readonly=true rows="3" cols="80">{{ sans_serif_italic(input) }}</textarea></td></td></tr>
+                <tr><td class="label">Sans Serif Bold Italic<td><textarea readonly=true rows="3" cols="80">{{ sans_serif_bold_italic(input) }}</textarea></td></td></tr>
+                <tr><td class="label">Monospace<td><textarea readonly=true rows="3" cols="80">{{ monospace(input) }}</textarea></td></td></tr>
+            </table>
+        </div>
+        <script>
+         convert = function(input, uppercase, lowercase, digit) {
+             u = [...uppercase]
+             l = [...lowercase]
+             d = [...digit]
+             return [...input].map(function(c) {
+                 var code = c.codePointAt(0)
+                 if (0x41 <= code && code <= 0x5a) {
+                     var i = code - 0x41
+                     return u[i]
+                 } else if (0x61 <= code && code <= 0x7a) {
+                     var i = code - 0x61
+                     return l[i]
+                 } else if (0x30 <= code && code <= 0x39) {
+                     var i = code - 0x30
+                     return d[i]
+                 }
+                 return c
+             }).join('')
+         }
+         var app = new Vue({
+             el: '#app',
+             data: {
+                 input: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ\nabcdefghijklmnopqrstuvwxyz\n0123456789',
+             },
+             methods: {
+                 bold: function(input) {
+                     return convert(input, '𝐀𝐁𝐂𝐃𝐄𝐅𝐆𝐇𝐈𝐉𝐊𝐋𝐌𝐍𝐎𝐏𝐐𝐑𝐒𝐓𝐔𝐕𝐖𝐗𝐘𝐙', '𝐚𝐛𝐜𝐝𝐞𝐟𝐠𝐡𝐢𝐣𝐤𝐥𝐦𝐧𝐨𝐩𝐪𝐫𝐬𝐭𝐮𝐯𝐰𝐱𝐲𝐳', '𝟎𝟏𝟐𝟑𝟒𝟓𝟔𝟕𝟖𝟗')
+                 },
+                 italic: function(input) {
+                     return convert(input, '𝐴𝐵𝐶𝐷𝐸𝐹𝐺𝐻𝐼𝐽𝐾𝐿𝑀𝑁𝑂𝑃𝑄𝑅𝑆𝑇𝑈𝑉𝑊𝑋𝑌𝑍', '𝑎𝑏𝑐𝑑𝑒𝑓𝑔h𝑖𝑗𝑘𝑙𝑚𝑛𝑜𝑝𝑞𝑟𝑠𝑡𝑢𝑣𝑤𝑥𝑦𝑧', '0123456789')
+                 },
+                 bold_italic: function(input) {
+                     return convert(input, '𝑨𝑩𝑪𝑫𝑬𝑭𝑮𝑯𝑰𝑱𝑲𝑳𝑴𝑵𝑶𝑷𝑸𝑹𝑺𝑻𝑼𝑽𝑾𝑿𝒀𝒁', '𝒂𝒃𝒄𝒅𝒆𝒇𝒈𝒉𝒊𝒋𝒌𝒍𝒎𝒏𝒐𝒑𝒒𝒓𝒔𝒕𝒖𝒗𝒘𝒙𝒚𝒛', '0123456789')
+                 },
+                 script: function(input) {
+                     return convert(input, '𝒜B𝒞𝒟EF𝒢HI𝒥𝒦LM𝒩𝒪𝒫𝒬R𝒮𝒯𝒰𝒱𝒲𝒳𝒴𝒵', '𝒶𝒷𝒸𝒹e𝒻g𝒽𝒾𝒿𝓀𝓁𝓂𝓃o𝓅𝓆𝓇𝓈𝓉𝓊𝓋𝓌𝓍𝓎𝓏', '0123456789')
+                 },
+                 bold_script: function(input) {
+                     return convert(input, '𝓐𝓑𝓒𝓓𝓔𝓕𝓖𝓗𝓘𝓙𝓚𝓛𝓜𝓝𝓞𝓟𝓠𝓡𝓢𝓣𝓤𝓥𝓦𝓧𝓨𝓩', '𝓪𝓫𝓬𝓭𝓮𝓯𝓰𝓱𝓲𝓳𝓴𝓵𝓶𝓷𝓸𝓹𝓺𝓻𝓼𝓽𝓾𝓿𝔀𝔁𝔂𝔃', '0123456789')
+                 },
+                 fraktur: function(input) {
+                     return convert(input, '𝔄𝔅C𝔇𝔈𝔉𝔊HI𝔍𝔎𝔏𝔐𝔑𝔒𝔓𝔔R𝔖𝔗𝔘𝔙𝔚𝔛𝔜Z', '𝔞𝔟𝔠𝔡𝔢𝔣𝔤𝔥𝔦𝔧𝔨𝔩𝔪𝔫𝔬𝔭𝔮𝔯𝔰𝔱𝔲𝔳𝔴𝔵𝔶𝔷', '0123456789')
+                 },
+                 double_struck: function(input) {
+                     return convert(input, '𝔸𝔹C𝔻𝔼𝔽𝔾H𝕀𝕁𝕂𝕃𝕄N𝕆PQR𝕊𝕋𝕌𝕍𝕎𝕏𝕐Z', '𝕒𝕓𝕔𝕕𝕖𝕗𝕘𝕙𝕚𝕛𝕜𝕝𝕞𝕟𝕠𝕡𝕢𝕣𝕤𝕥𝕦𝕧𝕨𝕩𝕪𝕫', '𝟘𝟙𝟚𝟛𝟜𝟝𝟞𝟟𝟠𝟡')
+                 },
+                 bold_fraktur: function(input) {
+                     return convert(input, '𝕬𝕭𝕮𝕯𝕰𝕱𝕲𝕳𝕴𝕵𝕶𝕷𝕸𝕹𝕺𝕻𝕼𝕽𝕾𝕿𝖀𝖁𝖂𝖃𝖄𝖅', '𝖆𝖇𝖈𝖉𝖊𝖋𝖌𝖍𝖎𝖏𝖐𝖑𝖒𝖓𝖔𝖕𝖖𝖗𝖘𝖙𝖚𝖛𝖜𝖝𝖞', '0123456789')
+                 },
+                 sans_serif: function(input) {
+                     return convert(input, '𝖠𝖡𝖢𝖣𝖤𝖥𝖦𝖧𝖨𝖩𝖪𝖫𝖬𝖭𝖮𝖯𝖰𝖱𝖲𝖳𝖴𝖵𝖶𝖷𝖸𝖹', '𝖺𝖻𝖼𝖽𝖾𝖿𝗀𝗁𝗂𝗃𝗄𝗅𝗆𝗇𝗈𝗉𝗊𝗋𝗌𝗍𝗎𝗏𝗐𝗑𝗒𝗓', '𝟢𝟣𝟤𝟥𝟦𝟧𝟨𝟩𝟪𝟫')
+                 },
+                 sans_serif_bold: function(input) {
+                     return convert(input, '𝗔𝗕𝗖𝗗𝗘𝗙𝗚𝗛𝗜𝗝𝗞𝗟𝗠𝗡𝗢𝗣𝗤𝗥𝗦𝗧𝗨𝗩𝗪𝗫𝗬𝗭', '𝗮𝗯𝗰𝗱𝗲𝗳𝗴𝗵𝗶𝗷𝗸𝗹𝗺𝗻𝗼𝗽𝗾𝗿𝘀𝘁𝘂𝘃𝘄𝘅𝘆𝘇', '𝟬𝟭𝟮𝟯𝟰𝟱𝟲𝟳𝟴𝟵')
+                 },
+                 sans_serif_italic: function(input) {
+                     return convert(input, '𝘈𝘉𝘊𝘋𝘌𝘍𝘎𝘏𝘐𝘑𝘒𝘓𝘔𝘕𝘖𝘗𝘘𝘙𝘚𝘛𝘜𝘝𝘞𝘟𝘠𝘡', '𝘢𝘣𝘤𝘥𝘦𝘧𝘨𝘩𝘪𝘫𝘬𝘭𝘮𝘯𝘰𝘱𝘲𝘳𝘴𝘵𝘶𝘷𝘸𝘹𝘺𝘻', '0123456789')
+                 },
+                 sans_serif_bold_italic: function(input) {
+                     return convert(input, '𝘼𝘽𝘾𝘿𝙀𝙁𝙂𝙃𝙄𝙅𝙆𝙇𝙈𝙉𝙊𝙋𝙌𝙍𝙎𝙏𝙐𝙑𝙒𝙓𝙔𝙕', '𝙖𝙗𝙘𝙙𝙚𝙛𝙜𝙝𝙞𝙟𝙠𝙡𝙢𝙣𝙤𝙥𝙦𝙧𝙨𝙩𝙪𝙫𝙬𝙭𝙮𝙯', '0123456789')
+                 },
+                 monospace: function(input) {
+                     return convert(input, '𝙰𝙱𝙲𝙳𝙴𝙵𝙶𝙷𝙸𝙹𝙺𝙻𝙼𝙽𝙾𝙿𝚀𝚁𝚂𝚃𝚄𝚅𝚆𝚇𝚈𝚉', '𝚊𝚋𝚌𝚍𝚎𝚏𝚐𝚑𝚒𝚓𝚔𝚕𝚖𝚗𝚘𝚙𝚚𝚛𝚜𝚝𝚞𝚟𝚠𝚡𝚢𝚣', '𝟶𝟷𝟸𝟹𝟺𝟻𝟼𝟽𝟾𝟿')
+                 },
+             },
+         })
+        </script>
+    </body>
+</html>
+
+
